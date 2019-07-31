@@ -1,0 +1,53 @@
+package com.github.timvlaer.thrifty;
+
+import com.microsoft.thrifty.compiler.ThriftyCompiler;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Mojo(name = "thrifty-compiler", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Execute(phase = LifecyclePhase.GENERATE_SOURCES, goal = "thrifty-compiler")
+public class ThriftyCompilerMojo extends AbstractMojo {
+
+  @Parameter(required = true)
+  private File[] thriftFiles;
+
+  @Parameter(defaultValue = "${project.build.directory}/generated-sources/thrifty/")
+  private String outputDirectory;
+
+  @Parameter(defaultValue = "${project}", required = true, readonly = true)
+  private MavenProject project;
+
+  public void execute() {
+    List<String> arguments = new ArrayList<>();
+    arguments.add("--out=" + outputDirectory);
+    arguments.addAll(Arrays.stream(thriftFiles).map(File::getAbsolutePath).collect(Collectors.toList()));
+    getLog().debug("Run thrifty compiler with following arguments: " + arguments);
+
+    ThriftyCompiler.main(arguments.toArray(new String[]{}));
+
+    getLog().debug("Adding " + outputDirectory + " as source root in the maven project.");
+    project.addCompileSourceRoot(outputDirectory);
+  }
+
+  void setThriftFiles(File[] thriftFiles) {
+    this.thriftFiles = thriftFiles;
+  }
+
+  void setOutputDirectory(String outputDirectory) {
+    this.outputDirectory = outputDirectory;
+  }
+
+  void setProject(MavenProject project) {
+    this.project = project;
+  }
+}

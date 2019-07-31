@@ -1,0 +1,3 @@
+# thrifty-maven-plugin
+
+
