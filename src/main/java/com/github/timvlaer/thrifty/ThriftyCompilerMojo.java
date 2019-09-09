@@ -27,7 +27,12 @@ public class ThriftyCompilerMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
 
+  @Parameter(defaultValue = "false")
+  private boolean enableConvenienceMethods;
+
   public void execute() {
+    GlobalFlags.enableConvenienceMethods = enableConvenienceMethods;
+
     List<String> arguments = new ArrayList<>();
     arguments.add("--out=" + outputDirectory);
     arguments.addAll(Arrays.stream(thriftFiles).map(File::getAbsolutePath).collect(Collectors.toList()));
@@ -49,5 +54,9 @@ public class ThriftyCompilerMojo extends AbstractMojo {
 
   void setProject(MavenProject project) {
     this.project = project;
+  }
+
+  public void setEnableConvenienceMethods(boolean enableConvenienceMethods) {
+    this.enableConvenienceMethods = enableConvenienceMethods;
   }
 }
