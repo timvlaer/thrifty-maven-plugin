@@ -1,5 +1,6 @@
 package com.github.timvlaer.thrifty.plugin;
 
+import com.github.timvlaer.thrifty.GlobalFlags;
 import com.microsoft.thrifty.compiler.spi.TypeProcessor;
 import com.squareup.javapoet.*;
 
@@ -17,11 +18,13 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
 
   @Override
   public TypeSpec process(TypeSpec type) {
-    if (wasThriftUnion(type)) {
-      TypeSpec.Builder builder = type.toBuilder();
-      builder.addMethod(createTagMethod(type));
-      builder.addMethod(createValueMethod(type));
-      return builder.build();
+    if (GlobalFlags.enableConvenienceMethods) {
+      if (wasThriftUnion(type)) {
+        TypeSpec.Builder builder = type.toBuilder();
+        builder.addMethod(createTagMethod(type));
+        builder.addMethod(createValueMethod(type));
+        return builder.build();
+      }
     }
 
     return type;

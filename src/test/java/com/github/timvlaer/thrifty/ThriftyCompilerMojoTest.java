@@ -56,6 +56,7 @@ public class ThriftyCompilerMojoTest {
 
   @Test
   public void executeWithProcessor() throws Exception {
+    mojo.setEnableConvenienceMethods(true);
     mojo.setThriftFiles(new File[]{new File("src/test/resources/union.thrift")});
 
     mojo.execute();
