@@ -47,6 +47,13 @@ The generated code depends on `thrifty-runtime`, so add the following to your de
 ```
 
 ## Generated convenience methods
-This Maven plugin adds two methods to classes that are based on Thrift `union` types  if you set `<enableConvenienceMethods>true</en...`.
+This Maven plugin generates extra methods if you set `<enableConvenienceMethods>true</en...`.
+
+On all classes:
+* `public static Builder builder()`, as a shortcut to `new StructName.Builder()` 
+* `public static Builder builder(StructName prototype)`, as a shortcut to `new StructName.Builder(struct)` 
+* `public Builder toBuilder(StructName prototype)`, as a shortcut to `new StructName.Builder(struct)` 
+
+On classes that are based on Thrift `union` types:
 * `public String tag()` which returns the name of the filled field
 * `public Object value()` which returns the value of the filled field (untyped)

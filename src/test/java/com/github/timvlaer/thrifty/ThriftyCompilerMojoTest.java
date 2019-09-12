@@ -79,6 +79,15 @@ public class ThriftyCompilerMojoTest {
         "    if (value3 != null) return value3;\n" +
         "    throw new IllegalStateException(\"Union type should have one value!\");\n" +
         "  }");
+    assertThat(result).contains("public static Builder builder() {\n" +
+        "    return new Builder();\n" +
+        "  }");
+    assertThat(result).contains("public static Builder builder(TestUnion prototype) {\n" +
+        "    return new Builder(prototype);\n" +
+        "  }");
+    assertThat(result).contains("public Builder toBuilder() {\n" +
+        "    return new Builder(this);\n" +
+        "  }");
 
     File codeForStruct = new File(outputFolder.getRoot(), "com/sentiance/thrift/TestStruct.java");
     assertThat(codeForStruct).exists();

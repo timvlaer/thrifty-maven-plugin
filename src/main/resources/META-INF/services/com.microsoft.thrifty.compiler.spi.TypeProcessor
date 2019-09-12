@@ -1,1 +1,1 @@
-com.github.timvlaer.thrifty.plugin.TaggedUnionMethodTypeProcessor
+com.github.timvlaer.thrifty.plugin.DelegatingTypeProcessor
