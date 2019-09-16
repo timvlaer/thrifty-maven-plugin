@@ -20,7 +20,7 @@ Add the following plugin to the `<build>` part of your Maven pom.xml file
 <plugin>
     <groupId>com.github.timvlaer</groupId>
     <artifactId>thrifty-maven-plugin</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <configuration>
         <thriftFiles>
             <file>thrift-schema/internal.thrift</file>
@@ -47,7 +47,7 @@ The generated code depends on `thrifty-runtime`, so add the following to your de
 ```
 
 ## Generated convenience methods
-This Maven plugin generates extra methods if you set `<enableConvenienceMethods>true</en...`.
+This Maven plugin generates extra methods if you set `<enableConvenienceMethods>` to `true` (default is `false`). 
 
 On all classes:
 * `public static Builder builder()`, as a shortcut to `new StructName.Builder()` 
