@@ -52,7 +52,7 @@ This Maven plugin generates extra methods if you set `<enableConvenienceMethods>
 On all classes:
 * `public static Builder builder()`, as a shortcut to `new StructName.Builder()` 
 * `public static Builder builder(StructName prototype)`, as a shortcut to `new StructName.Builder(struct)` 
-* `public Builder toBuilder(StructName prototype)`, as a shortcut to `new StructName.Builder(struct)` 
+* `public Builder toBuilder()`, as a shortcut to `new StructName.Builder(struct)` 
 
 On classes that are based on Thrift `union` types:
 * `public String tag()` which returns the name of the filled field
