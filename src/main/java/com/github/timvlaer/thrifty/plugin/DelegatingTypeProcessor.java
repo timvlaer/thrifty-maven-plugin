@@ -11,7 +11,8 @@ public class DelegatingTypeProcessor implements TypeProcessor {
 
   private static final List<TypeProcessor> typeProcessors = Arrays.asList(
       new TaggedUnionMethodTypeProcessor(),
-      new BuilderMethodsTypeProcessor()
+      new BuilderMethodsTypeProcessor(),
+      new BuilderGetterMethodsTypeProcessor()
   );
 
   @Override

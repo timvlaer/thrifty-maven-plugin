@@ -1,6 +1,5 @@
 package com.github.timvlaer.thrifty.plugin;
 
-import com.github.timvlaer.thrifty.GlobalFlags;
 import com.microsoft.thrifty.compiler.spi.TypeProcessor;
 import com.squareup.javapoet.*;
 
@@ -15,7 +14,6 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
 
   @Override
   public TypeSpec process(TypeSpec type) {
-    if (GlobalFlags.enableConvenienceMethods) {
       if (hasBuilderClass(type)) {
         return type.toBuilder()
             .addMethod(createNewBuilderMethod())
@@ -23,7 +21,6 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
             .addMethod(createToBuilderMethod())
             .build();
       }
-    }
     return type;
   }
 
