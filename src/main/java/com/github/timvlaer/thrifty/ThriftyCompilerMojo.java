@@ -30,8 +30,12 @@ public class ThriftyCompilerMojo extends AbstractMojo {
   @Parameter(defaultValue = "false")
   private boolean enableConvenienceMethods;
 
+  @Parameter(defaultValue = "true")
+  private boolean generateGettersInBuilders;
+
   public void execute() {
     GlobalFlags.enableConvenienceMethods = enableConvenienceMethods;
+    GlobalFlags.generateGettersInBuilders = generateGettersInBuilders;
 
     List<String> arguments = new ArrayList<>();
     arguments.add("--out=" + outputDirectory);
@@ -58,5 +62,9 @@ public class ThriftyCompilerMojo extends AbstractMojo {
 
   public void setEnableConvenienceMethods(boolean enableConvenienceMethods) {
     this.enableConvenienceMethods = enableConvenienceMethods;
+  }
+
+  public void setGenerateGettersInBuilders(boolean generateGettersInBuilders) {
+    this.generateGettersInBuilders = generateGettersInBuilders;
   }
 }
