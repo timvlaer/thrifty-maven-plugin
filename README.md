@@ -20,7 +20,7 @@ Add the following plugin to the `<build>` part of your Maven pom.xml file
 <plugin>
     <groupId>com.github.timvlaer</groupId>
     <artifactId>thrifty-maven-plugin</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <configuration>
         <thriftFiles>
             <file>thrift-schema/internal.thrift</file>
