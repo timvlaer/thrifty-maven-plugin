@@ -14,7 +14,7 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
 
   @Override
   public TypeSpec process(TypeSpec type) {
-      if (hasBuilderClass(type)) {
+    if (TypeSpecUtil.getBuilderClass(type).isPresent()) {
         return type.toBuilder()
             .addMethod(createNewBuilderMethod())
             .addMethod(createNewBuilderMethodWithParameter(type))
@@ -64,10 +64,6 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
         .addModifiers(Modifier.PUBLIC)
         .addCode(codeBlockBuilder.build())
         .build();
-  }
-
-  private Boolean hasBuilderClass(TypeSpec type) {
-    return type.typeSpecs.stream().anyMatch(e -> BUILDER_CLASS_NAME.equals(e.name));
   }
 
 }
