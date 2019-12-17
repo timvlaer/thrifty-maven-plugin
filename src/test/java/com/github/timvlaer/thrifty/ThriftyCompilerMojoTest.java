@@ -1,5 +1,6 @@
 package com.github.timvlaer.thrifty;
 
+import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,11 +14,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static com.github.timvlaer.thrifty.plugin.TaggedUnionMethodTypeProcessor.TAG_METHOD_NAME;
 import static com.github.timvlaer.thrifty.plugin.TaggedUnionMethodTypeProcessor.VALUE_METHOD_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ThriftyCompilerMojoTest {
@@ -31,9 +34,13 @@ public class ThriftyCompilerMojoTest {
 
   @Mock
   private MavenProject project;
+  @Mock
+  private Build build;
 
   @Before
   public void setUp() {
+    when(project.getBuild()).thenReturn(build);
+    when(build.getOutputDirectory()).thenReturn(outputFolder.getRoot().getAbsolutePath() + "/classes");
     mojo.setProject(project);
     mojo.setOutputDirectory(outputFolder.getRoot().getAbsolutePath());
   }
@@ -95,6 +102,24 @@ public class ThriftyCompilerMojoTest {
     result = new String(Files.readAllBytes(codeForStruct.toPath()), UTF_8);
     assertThat(result).doesNotContain(TAG_METHOD_NAME + "()");
     assertThat(result).doesNotContain(VALUE_METHOD_NAME + "()");
+  }
+
+  @Test
+  public void executeWithInclude() throws Exception {
+    mojo.setThriftFiles(new File[]{new File("src/test/resources/include.thrift")});
+
+    mojo.execute();
+
+    File resultFile = new File(outputFolder.getRoot(), "classes");
+    assertThat(resultFile).exists().isDirectory();
+
+    assertThat(Files.list(resultFile.toPath()))
+        .containsExactlyInAnyOrder(
+            Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/include.thrift"),
+            Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/testcase.thrift"),
+            Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/union.thrift")
+        );
+
   }
 
 }
