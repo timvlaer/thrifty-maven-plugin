@@ -27,6 +27,7 @@ public class CopyThriftFilesToClasses {
   }
 
   public void findAllThriftFilesAndAddToClasses(List<String> entryThriftFiles) {
+    log.debug("Add thrift files to classes directory");
     try {
       Path outputDirectory = Paths.get(project.getBuild().getOutputDirectory());
       Files.createDirectories(outputDirectory);
@@ -44,7 +45,7 @@ public class CopyThriftFilesToClasses {
               .resolve(commonRoot.relativize(thriftFile.getParent()))
               .normalize()
               .resolve(thriftFile.getFileName());
-          log.info("Copy: " + thriftFile + " => " + resultFile);
+          log.debug("Copy: " + thriftFile + " => " + resultFile);
           Files.createDirectories(resultFile.getParent());
           Files.copy(thriftFile, resultFile, StandardCopyOption.REPLACE_EXISTING);
         }

@@ -38,7 +38,6 @@ public class ThriftyCompilerMojo extends AbstractMojo {
     GlobalFlags.generateGettersInBuilders = generateGettersInBuilders;
 
     List<String> entryThriftFiles = Arrays.stream(thriftFiles).map(File::getAbsolutePath).collect(Collectors.toList());
-    new CopyThriftFilesToClasses(project, getLog()).findAllThriftFilesAndAddToClasses(entryThriftFiles);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("--out=" + outputDirectory);
@@ -49,6 +48,8 @@ public class ThriftyCompilerMojo extends AbstractMojo {
 
     getLog().debug("Adding " + outputDirectory + " as source root in the maven project.");
     project.addCompileSourceRoot(outputDirectory);
+
+    new CopyThriftFilesToClasses(project, getLog()).findAllThriftFilesAndAddToClasses(entryThriftFiles);
   }
 
   void setThriftFiles(File[] thriftFiles) {
