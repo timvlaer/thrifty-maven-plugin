@@ -5,11 +5,11 @@
 
   <groupId>com.github.timvlaer</groupId>
   <artifactId>thrifty-maven-plugin</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.5.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>Thrifty Maven Plugin</name>
-  <description>TBD</description>
+  <description>Maven plugin that generates Java code for a Thrift schema using the Thrifty compiler.</description>
   <url>https://github.com/timvlaer/thrifty-maven-plugin</url>
 
   <developers>
