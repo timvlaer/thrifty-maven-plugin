@@ -20,7 +20,7 @@ Add the following plugin to the `<build>` part of your Maven pom.xml file
 <plugin>
     <groupId>com.github.timvlaer</groupId>
     <artifactId>thrifty-maven-plugin</artifactId>
-    <version>0.4.0</version>
+    <version>0.6.0</version>
     <configuration>
         <thriftFiles>
             <file>thrift-schema/internal.thrift</file>
@@ -42,8 +42,15 @@ The generated code depends on `thrifty-runtime`, so add the following to your de
 <dependency>
     <groupId>com.microsoft.thrifty</groupId>
     <artifactId>thrifty-runtime</artifactId>
-    <version>1.0.0</version>
+    <version>2.1.0</version>
 </dependency>
+```
+
+## Java 9 and above
+
+Add the `maven.compiler.release` property to the pom.xml file. The plugin will pick this up and configure Thrifty accordingly. 
+```xml
+<maven.compiler.release>11</maven.compiler.release>
 ```
 
 ## Generated convenience methods

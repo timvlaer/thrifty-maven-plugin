@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import static com.github.timvlaer.thrifty.plugin.TaggedUnionMethodTypeProcessor.TAG_METHOD_NAME;
 import static com.github.timvlaer.thrifty.plugin.TaggedUnionMethodTypeProcessor.VALUE_METHOD_NAME;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ThriftyCompilerMojoTest {
 
-  private ThriftyCompilerMojo mojo = new ThriftyCompilerMojo();
+  private final ThriftyCompilerMojo mojo = new ThriftyCompilerMojo();
 
   @Rule
   public TemporaryFolder outputFolder = new TemporaryFolder();
@@ -40,6 +41,7 @@ public class ThriftyCompilerMojoTest {
   @Before
   public void setUp() {
     when(project.getBuild()).thenReturn(build);
+    when(project.getProperties()).thenReturn(new Properties());
     when(build.getOutputDirectory()).thenReturn(outputFolder.getRoot().getAbsolutePath() + "/classes");
     mojo.setProject(project);
     mojo.setOutputDirectory(outputFolder.getRoot().getAbsolutePath());
@@ -58,7 +60,22 @@ public class ThriftyCompilerMojoTest {
 
     String result = new String(Files.readAllBytes(resultFile.toPath()), UTF_8);
     assertThat(result).contains("package com.sentiance.thrift;");
+    assertThat(result).contains("import javax.annotation.Generated;"); // java 8
     assertThat(result).contains("public final class LocationFix implements Struct");
+  }
+
+  @Test
+  public void executeWithJava11() throws Exception {
+    Properties properties = new Properties();
+    properties.setProperty("maven.compiler.release", "11");
+    when(project.getProperties()).thenReturn(properties);
+    mojo.setThriftFiles(new File[]{new File("src/test/resources/testcase.thrift")});
+
+    mojo.execute();
+
+    File resultFile = new File(outputFolder.getRoot(), "com/sentiance/thrift/LocationFix.java");
+    String result = new String(Files.readAllBytes(resultFile.toPath()), UTF_8);
+    assertThat(result).contains("import javax.annotation.processing.Generated;"); // java 9
   }
 
   @Test
