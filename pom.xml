@@ -5,11 +5,11 @@
 
   <groupId>com.github.timvlaer</groupId>
   <artifactId>thrifty-maven-plugin</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.6.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Thrifty Maven Plugin</name>
-  <description>TBD</description>
+  <description>Maven plugin that generates Java code for a Thrift schema using the Thrifty compiler.</description>
   <url>https://github.com/timvlaer/thrifty-maven-plugin</url>
 
   <developers>
@@ -34,12 +34,11 @@
   </scm>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
 
-    <maven.version>3.5.4</maven.version>
+    <maven.version>3.6.3</maven.version>
 
-    <thrifty.version>1.0.0</thrifty.version>
+    <thrifty.version>2.1.0</thrifty.version>
 
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
@@ -120,8 +119,16 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5.2</version>
+        <version>3.6.0</version>
       </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
@@ -214,7 +221,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.4</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>

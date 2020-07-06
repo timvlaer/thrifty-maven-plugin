@@ -37,19 +37,30 @@ public class ThriftyCompilerMojo extends AbstractMojo {
     GlobalFlags.enableConvenienceMethods = enableConvenienceMethods;
     GlobalFlags.generateGettersInBuilders = generateGettersInBuilders;
 
-    List<String> entryThriftFiles = Arrays.stream(thriftFiles).map(File::getAbsolutePath).collect(Collectors.toList());
+    List<String> entryThriftFiles =
+        Arrays.stream(thriftFiles).map(File::getAbsolutePath).collect(Collectors.toList());
 
     List<String> arguments = new ArrayList<>();
+
+    String compilerReleaseVersion = (String) project.getProperties().get("maven.compiler.release");
+    if (compilerReleaseVersion != null) {
+      getLog().info("maven.compiler.release property is set to " + compilerReleaseVersion);
+      if (Integer.parseInt(compilerReleaseVersion) >= 9) {
+        arguments.add("--generated-annotation-type=jdk9");
+      }
+    }
+
     arguments.add("--out=" + outputDirectory);
     arguments.addAll(entryThriftFiles);
     getLog().debug("Run thrifty compiler with following arguments: " + arguments);
 
-    ThriftyCompiler.main(arguments.toArray(new String[]{}));
+    ThriftyCompiler.main(arguments.toArray(new String[] {}));
 
     getLog().debug("Adding " + outputDirectory + " as source root in the maven project.");
     project.addCompileSourceRoot(outputDirectory);
 
-    new CopyThriftFilesToClasses(project, getLog()).findAllThriftFilesAndAddToClasses(entryThriftFiles);
+    new CopyThriftFilesToClasses(project, getLog())
+        .findAllThriftFilesAndAddToClasses(entryThriftFiles);
   }
 
   void setThriftFiles(File[] thriftFiles) {
