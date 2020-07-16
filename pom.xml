@@ -38,7 +38,7 @@
 
     <maven.version>3.6.3</maven.version>
 
-    <thrifty.version>2.1.0</thrifty.version>
+    <thrifty.version>2.1.1</thrifty.version>
 
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>

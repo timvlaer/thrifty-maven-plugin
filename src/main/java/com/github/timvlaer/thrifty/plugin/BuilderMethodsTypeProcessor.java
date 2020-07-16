@@ -10,17 +10,15 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
   public static final String NEW_BUILDER_METHOD_NAME = "builder";
   public static final String TO_BUILDER_METHOD_NAME = "toBuilder";
 
-  private static final String BUILDER_CLASS_NAME = "Builder";
-
   @Override
   public TypeSpec process(TypeSpec type) {
     if (TypeSpecUtil.getBuilderClass(type).isPresent()) {
-        return type.toBuilder()
-            .addMethod(createNewBuilderMethod())
-            .addMethod(createNewBuilderMethodWithParameter(type))
-            .addMethod(createToBuilderMethod())
-            .build();
-      }
+      return type.toBuilder()
+          .addMethod(createNewBuilderMethod())
+          .addMethod(createNewBuilderMethodWithParameter(type))
+          .addMethod(createToBuilderMethod())
+          .build();
+    }
     return type;
   }
 
@@ -40,7 +38,8 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
   private MethodSpec createNewBuilderMethodWithParameter(TypeSpec type) {
     ClassName builder = ClassName.bestGuess("Builder");
 
-    ParameterSpec param = ParameterSpec.builder(ClassName.bestGuess(type.name), "prototype").build();
+    ParameterSpec param =
+        ParameterSpec.builder(ClassName.bestGuess(type.name), "prototype").build();
 
     CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
     codeBlockBuilder.addStatement("return new $T($N)", builder, param.name);
@@ -65,5 +64,4 @@ public class BuilderMethodsTypeProcessor implements TypeProcessor {
         .addCode(codeBlockBuilder.build())
         .build();
   }
-
 }

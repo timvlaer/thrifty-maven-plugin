@@ -28,28 +28,25 @@ public class ThriftyCompilerMojoTest {
 
   private final ThriftyCompilerMojo mojo = new ThriftyCompilerMojo();
 
-  @Rule
-  public TemporaryFolder outputFolder = new TemporaryFolder();
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  @Rule public TemporaryFolder outputFolder = new TemporaryFolder();
+  @Rule public ExpectedException expectedException = ExpectedException.none();
 
-  @Mock
-  private MavenProject project;
-  @Mock
-  private Build build;
+  @Mock private MavenProject project;
+  @Mock private Build build;
 
   @Before
   public void setUp() {
     when(project.getBuild()).thenReturn(build);
     when(project.getProperties()).thenReturn(new Properties());
-    when(build.getOutputDirectory()).thenReturn(outputFolder.getRoot().getAbsolutePath() + "/classes");
+    when(build.getOutputDirectory())
+        .thenReturn(outputFolder.getRoot().getAbsolutePath() + "/classes");
     mojo.setProject(project);
     mojo.setOutputDirectory(outputFolder.getRoot().getAbsolutePath());
   }
 
   @Test
   public void execute() throws Exception {
-    mojo.setThriftFiles(new File[]{new File("src/test/resources/testcase.thrift")});
+    mojo.setThriftFiles(new File[] {new File("src/test/resources/testcase.thrift")});
 
     mojo.execute();
 
@@ -69,7 +66,7 @@ public class ThriftyCompilerMojoTest {
     Properties properties = new Properties();
     properties.setProperty("maven.compiler.release", "11");
     when(project.getProperties()).thenReturn(properties);
-    mojo.setThriftFiles(new File[]{new File("src/test/resources/testcase.thrift")});
+    mojo.setThriftFiles(new File[] {new File("src/test/resources/testcase.thrift")});
 
     mojo.execute();
 
@@ -82,7 +79,7 @@ public class ThriftyCompilerMojoTest {
   public void executeWithProcessor() throws Exception {
     mojo.setEnableConvenienceMethods(true);
     mojo.setGenerateGettersInBuilders(true);
-    mojo.setThriftFiles(new File[]{new File("src/test/resources/union.thrift")});
+    mojo.setThriftFiles(new File[] {new File("src/test/resources/union.thrift")});
 
     mojo.execute();
 
@@ -92,27 +89,40 @@ public class ThriftyCompilerMojoTest {
     assertThat(codeForUnion).exists();
 
     String result = new String(Files.readAllBytes(codeForUnion.toPath()), UTF_8);
-    assertThat(result).contains("public String " + TAG_METHOD_NAME + "() {\n" +
-        "    if (value1 != null) return \"value1\";\n" +
-        "    if (value2 != null) return \"value2\";\n" +
-        "    if (value3 != null) return \"value3\";\n" +
-        "    throw new IllegalStateException(\"Union type should have one value!\");\n" +
-        "  }");
-    assertThat(result).contains("public Object " + VALUE_METHOD_NAME + "() {\n" +
-        "    if (value1 != null) return value1;\n" +
-        "    if (value2 != null) return value2;\n" +
-        "    if (value3 != null) return value3;\n" +
-        "    throw new IllegalStateException(\"Union type should have one value!\");\n" +
-        "  }");
-    assertThat(result).contains("public static Builder builder() {\n" +
-        "    return new Builder();\n" +
-        "  }");
-    assertThat(result).contains("public static Builder builder(TestUnion prototype) {\n" +
-        "    return new Builder(prototype);\n" +
-        "  }");
-    assertThat(result).contains("public Builder toBuilder() {\n" +
-        "    return new Builder(this);\n" +
-        "  }");
+    assertThat(result)
+        .contains(
+            "public String "
+                + TAG_METHOD_NAME
+                + "() {\n"
+                + "    if (value1 != null) return \"value1\";\n"
+                + "    if (value2 != null) return \"value2\";\n"
+                + "    if (value3 != null) return \"value3\";\n"
+                + "    throw new IllegalStateException(\"Union type should have one value!\");\n"
+                + "  }");
+    assertThat(result)
+        .contains(
+            "public Object "
+                + VALUE_METHOD_NAME
+                + "() {\n"
+                + "    if (value1 != null) return value1;\n"
+                + "    if (value2 != null) return value2;\n"
+                + "    if (value3 != null) return value3;\n"
+                + "    throw new IllegalStateException(\"Union type should have one value!\");\n"
+                + "  }");
+    assertThat(result)
+        .contains("public static Builder builder() {\n" + "    return new Builder();\n" + "  }");
+    assertThat(result)
+        .contains(
+            "public static Builder builder(TestUnion prototype) {\n"
+                + "    return new Builder(prototype);\n"
+                + "  }");
+    assertThat(result)
+        .contains("public Builder toBuilder() {\n" + "    return new Builder(this);\n" + "  }");
+    assertThat(result)
+        .contains(
+            "public static TestUnion value1(String value1) {\n"
+                + "    return new Builder().value1(value1).build();\n"
+                + "  }\n");
 
     File codeForStruct = new File(outputFolder.getRoot(), "com/sentiance/thrift/TestStruct.java");
     assertThat(codeForStruct).exists();
@@ -123,7 +133,7 @@ public class ThriftyCompilerMojoTest {
 
   @Test
   public void executeWithInclude() throws Exception {
-    mojo.setThriftFiles(new File[]{new File("src/test/resources/include.thrift")});
+    mojo.setThriftFiles(new File[] {new File("src/test/resources/include.thrift")});
 
     mojo.execute();
 
@@ -134,9 +144,6 @@ public class ThriftyCompilerMojoTest {
         .containsExactlyInAnyOrder(
             Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/include.thrift"),
             Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/testcase.thrift"),
-            Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/union.thrift")
-        );
-
+            Paths.get(outputFolder.getRoot().getAbsolutePath(), "classes/union.thrift"));
   }
-
 }

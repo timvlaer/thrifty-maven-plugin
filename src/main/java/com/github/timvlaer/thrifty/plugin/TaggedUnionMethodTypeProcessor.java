@@ -21,6 +21,7 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
       TypeSpec.Builder builder = type.toBuilder();
       builder.addMethod(createTagMethod(type));
       builder.addMethod(createValueMethod(type));
+      builder.addMethods(createStaticFactoryMethods(type));
       return builder.build();
     }
 
@@ -29,9 +30,13 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
 
   private MethodSpec createTagMethod(TypeSpec type) {
     CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
-    getUnionFieldSpecs(type).forEach(fieldSpec ->
-        codeBlockBuilder.addStatement("if ($N != null) return $S", fieldSpec.name, fieldSpec.name));
-    codeBlockBuilder.addStatement("throw new $T($S)", IllegalStateException.class, "Union type should have one value!");
+    getUnionFieldSpecs(type)
+        .forEach(
+            fieldSpec ->
+                codeBlockBuilder.addStatement(
+                    "if ($N != null) return $S", fieldSpec.name, fieldSpec.name));
+    codeBlockBuilder.addStatement(
+        "throw new $T($S)", IllegalStateException.class, "Union type should have one value!");
 
     return createPublicMethod(TAG_METHOD_NAME, String.class, codeBlockBuilder.build());
   }
@@ -39,8 +44,12 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
   private MethodSpec createValueMethod(TypeSpec type) {
     CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
     getUnionFieldSpecs(type)
-        .forEach(fieldSpec -> codeBlockBuilder.addStatement("if ($N != null) return $N", fieldSpec.name, fieldSpec.name));
-    codeBlockBuilder.addStatement("throw new $T($S)", IllegalStateException.class, "Union type should have one value!");
+        .forEach(
+            fieldSpec ->
+                codeBlockBuilder.addStatement(
+                    "if ($N != null) return $N", fieldSpec.name, fieldSpec.name));
+    codeBlockBuilder.addStatement(
+        "throw new $T($S)", IllegalStateException.class, "Union type should have one value!");
 
     return createPublicMethod(VALUE_METHOD_NAME, Object.class, codeBlockBuilder.build());
   }
@@ -59,14 +68,33 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
         .build();
   }
 
+  private List<MethodSpec> createStaticFactoryMethods(TypeSpec type) {
+    return getUnionFieldSpecs(type).stream()
+        .map(
+            f ->
+                MethodSpec.methodBuilder(f.name)
+                    .returns(ClassName.bestGuess(type.name))
+                    .addParameter(f.type, f.name)
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                    .addCode(
+                        CodeBlock.builder()
+                            .addStatement("return new Builder().$L($L).build()", f.name, f.name)
+                            .build())
+                    .build())
+        .collect(Collectors.toList());
+  }
+
   private Boolean wasThriftUnion(TypeSpec type) {
-    return type.superinterfaces.contains(ClassName.get(com.microsoft.thrifty.Struct.class)) &&
-        type.typeSpecs.stream()
+    return type.superinterfaces.contains(ClassName.get(com.microsoft.thrifty.Struct.class))
+        && type.typeSpecs.stream()
             .filter(e -> BUILDER_CLASS_NAME.equals(e.name))
             .findFirst()
-            .flatMap(t -> t.methodSpecs.stream().filter(m -> BUILD_METHOD_NAME.equals(m.name)).findFirst())
+            .flatMap(
+                t ->
+                    t.methodSpecs.stream()
+                        .filter(m -> BUILD_METHOD_NAME.equals(m.name))
+                        .findFirst())
             .map(m -> m.code.toString().contains("Invalid union;"))
             .orElse(false);
   }
-
 }

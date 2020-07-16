@@ -30,7 +30,7 @@ public class ThriftyCompilerMojo extends AbstractMojo {
   @Parameter(defaultValue = "false")
   private boolean enableConvenienceMethods;
 
-  @Parameter(defaultValue = "true")
+  @Parameter(defaultValue = "false")
   private boolean generateGettersInBuilders;
 
   public void execute() {
