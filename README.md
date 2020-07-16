@@ -20,12 +20,13 @@ Add the following plugin to the `<build>` part of your Maven pom.xml file
 <plugin>
     <groupId>com.github.timvlaer</groupId>
     <artifactId>thrifty-maven-plugin</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <configuration>
         <thriftFiles>
             <file>thrift-schema/internal.thrift</file>
         </thriftFiles>
-        <enableConvenienceMethods>true</enableConvenienceMethods>
+        <enableConvenienceMethods>true</enableConvenienceMethods><!--default is false-->
+        <generateGettersInBuilders>false</generateGettersInBuilders><!--default is false-->
     </configuration>
     <executions>
         <execution>
@@ -42,7 +43,7 @@ The generated code depends on `thrifty-runtime`, so add the following to your de
 <dependency>
     <groupId>com.microsoft.thrifty</groupId>
     <artifactId>thrifty-runtime</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -64,3 +65,9 @@ On all classes:
 On classes that are based on Thrift `union` types:
 * `public String tag()` which returns the name of the filled field
 * `public Object value()` which returns the value of the filled field (untyped)
+* For each union field, a static factory method, e.g. `public static UnionName unionValue(String unionValue)`
+
+If you set `<generateGettersInBuilders>` to `true`, this plugin will generate getter methods on builders. 
+This might ease migration from the default (mutable) thrift generated code. 
+[Effective Java](https://www.goodreads.com/book/show/34927404-effective-java) doesn't recommend Getters on builders, 
+so the default for this setting is `false`.
