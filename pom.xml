@@ -5,7 +5,7 @@
 
   <groupId>com.github.timvlaer</groupId>
   <artifactId>thrifty-maven-plugin</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>Thrifty Maven Plugin</name>
@@ -38,7 +38,7 @@
 
     <maven.version>3.6.3</maven.version>
 
-    <thrifty.version>2.1.1</thrifty.version>
+    <thrifty.version>2.1.2</thrifty.version>
 
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
