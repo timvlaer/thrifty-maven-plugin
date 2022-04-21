@@ -85,7 +85,7 @@ public class TaggedUnionMethodTypeProcessor implements TypeProcessor {
   }
 
   private Boolean wasThriftUnion(TypeSpec type) {
-    return type.superinterfaces.contains(ClassName.get(com.microsoft.thrifty.Struct.class))
+    return type.superinterfaces.contains(ClassName.get("com.microsoft.thrifty", "Struct"))
         && type.typeSpecs.stream()
             .filter(e -> BUILDER_CLASS_NAME.equals(e.name))
             .findFirst()

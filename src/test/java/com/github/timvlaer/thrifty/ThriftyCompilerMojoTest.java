@@ -37,7 +37,6 @@ public class ThriftyCompilerMojoTest {
   @Before
   public void setUp() {
     when(project.getBuild()).thenReturn(build);
-    when(project.getProperties()).thenReturn(new Properties());
     when(build.getOutputDirectory())
         .thenReturn(outputFolder.getRoot().getAbsolutePath() + "/classes");
     mojo.setProject(project);
@@ -57,22 +56,7 @@ public class ThriftyCompilerMojoTest {
 
     String result = new String(Files.readAllBytes(resultFile.toPath()), UTF_8);
     assertThat(result).contains("package com.sentiance.thrift;");
-    assertThat(result).contains("import javax.annotation.Generated;"); // java 8
     assertThat(result).contains("public final class LocationFix implements Struct");
-  }
-
-  @Test
-  public void executeWithJava11() throws Exception {
-    Properties properties = new Properties();
-    properties.setProperty("maven.compiler.release", "11");
-    when(project.getProperties()).thenReturn(properties);
-    mojo.setThriftFiles(new File[] {new File("src/test/resources/testcase.thrift")});
-
-    mojo.execute();
-
-    File resultFile = new File(outputFolder.getRoot(), "com/sentiance/thrift/LocationFix.java");
-    String result = new String(Files.readAllBytes(resultFile.toPath()), UTF_8);
-    assertThat(result).contains("import javax.annotation.processing.Generated;"); // java 9
   }
 
   @Test
