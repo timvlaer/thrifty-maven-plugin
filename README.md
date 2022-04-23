@@ -20,7 +20,7 @@ Add the following plugin to the `<build>` part of your Maven pom.xml file
 <plugin>
     <groupId>com.github.timvlaer</groupId>
     <artifactId>thrifty-maven-plugin</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <configuration>
         <thriftFiles>
             <file>thrift-schema/internal.thrift</file>
@@ -43,7 +43,7 @@ The generated code depends on `thrifty-runtime`, so add the following to your de
 <dependency>
     <groupId>com.microsoft.thrifty</groupId>
     <artifactId>thrifty-runtime</artifactId>
-    <version>2.1.1</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
