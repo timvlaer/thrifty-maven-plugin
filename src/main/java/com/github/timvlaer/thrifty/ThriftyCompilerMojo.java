@@ -42,14 +42,7 @@ public class ThriftyCompilerMojo extends AbstractMojo {
 
     List<String> arguments = new ArrayList<>();
 
-    String compilerReleaseVersion = (String) project.getProperties().get("maven.compiler.release");
-    if (compilerReleaseVersion != null) {
-      getLog().info("maven.compiler.release property is set to " + compilerReleaseVersion);
-      if (Integer.parseInt(compilerReleaseVersion) >= 9) {
-        arguments.add("--generated-annotation-type=jdk9");
-      }
-    }
-
+    arguments.add("--lang=java"); //Thrifty generates Kotlin code by default
     arguments.add("--out=" + outputDirectory);
     arguments.addAll(entryThriftFiles);
     getLog().debug("Run thrifty compiler with following arguments: " + arguments);
