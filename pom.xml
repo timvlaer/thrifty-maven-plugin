@@ -36,7 +36,7 @@
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
 
-    <maven.version>3.6.3</maven.version>
+    <maven.version>3.8.1</maven.version>
 
     <thrifty.version>3.0.0</thrifty.version>
 
